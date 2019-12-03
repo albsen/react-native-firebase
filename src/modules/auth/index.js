@@ -21,6 +21,7 @@ import GithubAuthProvider from './providers/GithubAuthProvider';
 import OAuthProvider from './providers/OAuthProvider';
 import TwitterAuthProvider from './providers/TwitterAuthProvider';
 import FacebookAuthProvider from './providers/FacebookAuthProvider';
+import AppleAuthProvider from './providers/AppleAuthProvider';
 
 import type {
   ActionCodeInfo,
@@ -350,8 +351,8 @@ export default class Auth extends ModuleBase {
       .signInWithCredential(
         credential.providerId,
         credential.token,
-        credential.secret
-      )
+        credential.secret,
+        credential.nonce)
       .then(userCredential => this._setUserCredential(userCredential));
   }
 
@@ -371,8 +372,8 @@ export default class Auth extends ModuleBase {
       .signInWithCredential(
         credential.providerId,
         credential.token,
-        credential.secret
-      )
+        credential.secret,
+        credential.nonce)
       .then(userCredential => this._setUserCredential(userCredential));
   }
 
@@ -635,6 +636,7 @@ export const statics = {
   GithubAuthProvider,
   TwitterAuthProvider,
   FacebookAuthProvider,
+  AppleAuthProvider,
   OAuthProvider,
   PhoneAuthState: {
     CODE_SENT: 'sent',

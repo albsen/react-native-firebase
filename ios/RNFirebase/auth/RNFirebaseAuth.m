@@ -495,6 +495,8 @@ RCT_EXPORT_METHOD(updatePhoneNumber:
                         (NSString *) authToken
                         secret:
                         (NSString *) authSecret
+                        nonce:
+                        (NSString *) authNonce
                         resolver:
                         (RCTPromiseResolveBlock) resolve
                         rejecter:
@@ -505,7 +507,7 @@ RCT_EXPORT_METHOD(updatePhoneNumber:
 
   if (user) {
     FIRPhoneAuthCredential *credential =
-        (FIRPhoneAuthCredential *) [self getCredentialForProvider:provider token:authToken secret:authSecret];
+        (FIRPhoneAuthCredential *) [self getCredentialForProvider:provider token:authToken secret:authSecret nonce:authNonce];
 
     if (credential == nil) {
       return reject(@"auth/invalid-credential",
@@ -671,13 +673,15 @@ RCT_EXPORT_METHOD(signInWithCredential:
                         (NSString *) authToken
                         secret:
                         (NSString *) authSecret
+                        nonce:
+                        (NSString *) authNonce
                         resolver:
                         (RCTPromiseResolveBlock) resolve
                         rejecter:
                         (RCTPromiseRejectBlock) reject) {
   FIRApp *firApp = [RNFirebaseUtil getApp:appDisplayName];
 
-  FIRAuthCredential *credential = [self getCredentialForProvider:provider token:authToken secret:authSecret];
+  FIRAuthCredential *credential = [self getCredentialForProvider:provider token:authToken secret:authSecret nonce:authNonce];
 
   if (credential == nil) {
     return reject(@"auth/invalid-credential",
@@ -1012,6 +1016,7 @@ RCT_EXPORT_METHOD(_confirmVerificationCode:
  @param NSString provider
  @param NSString authToken
  @param NSString authSecret
+ @param NSString authNonce
  @param RCTPromiseResolveBlock resolve
  @param RCTPromiseRejectBlock reject
  @return
@@ -1024,12 +1029,14 @@ RCT_EXPORT_METHOD(linkWithCredential:
                         (NSString *) authToken
                         authSecret:
                         (NSString *) authSecret
+                        authNonce:
+                        (NSString *) authNonce
                         resolver:
                         (RCTPromiseResolveBlock) resolve
                         rejecter:
                         (RCTPromiseRejectBlock) reject) {
   FIRApp *firApp = [RNFirebaseUtil getApp:appDisplayName];
-  FIRAuthCredential *credential = [self getCredentialForProvider:provider token:authToken secret:authSecret];
+  FIRAuthCredential *credential = [self getCredentialForProvider:provider token:authToken secret:authSecret nonce:authNonce];
 
   if (credential == nil) {
     return reject(@"auth/invalid-credential",
@@ -1104,13 +1111,15 @@ RCT_EXPORT_METHOD(reauthenticateWithCredential:
                         (NSString *) authToken
                         authSecret:
                         (NSString *) authSecret
+                        authNonce:
+                        (NSString *) authNonce
                         resolver:
                         (RCTPromiseResolveBlock) resolve
                         rejecter:
                         (RCTPromiseRejectBlock) reject) {
   FIRApp *firApp = [RNFirebaseUtil getApp:appDisplayName];
 
-  FIRAuthCredential *credential = [self getCredentialForProvider:provider token:authToken secret:authSecret];
+  FIRAuthCredential *credential = [self getCredentialForProvider:provider token:authToken secret:authSecret nonce: authNonce];
 
   if (credential == nil) {
     return reject(@"auth/invalid-credential",
@@ -1171,15 +1180,18 @@ RCT_EXPORT_METHOD(fetchSignInMethodsForEmail:
  @param provider string
  @param authToken string
  @param authTokenSecret string
+ @param authNonce string
  @return FIRAuthCredential
  */
-- (FIRAuthCredential *)getCredentialForProvider:(NSString *)provider token:(NSString *)authToken secret:(NSString *)authTokenSecret {
+- (FIRAuthCredential *)getCredentialForProvider:(NSString *)provider token:(NSString *)authToken secret:(NSString *)authTokenSecret nonce:(NSString *)authNonce{
   FIRAuthCredential *credential;
 
   if ([provider compare:@"twitter.com" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
     credential = [FIRTwitterAuthProvider credentialWithToken:authToken secret:authTokenSecret];
   } else if ([provider compare:@"facebook.com" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
     credential = [FIRFacebookAuthProvider credentialWithAccessToken:authToken];
+  } else if ([provider compare:@"apple.com" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+    credential = [FIROAuthProvider credentialWithProviderID:@"apple.com" IDToken:authToken rawNonce:authNonce];
   } else if ([provider compare:@"google.com" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
     credential = [FIRGoogleAuthProvider credentialWithIDToken:authToken accessToken:authTokenSecret];
   } else if ([provider compare:@"password" options:NSCaseInsensitiveSearch] == NSOrderedSame) {

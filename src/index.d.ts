@@ -9,6 +9,7 @@ declare module 'react-native-firebase' {
     providerId: string;
     token: string;
     secret: string;
+    nonce?: string;
   };
 
   type FirebaseModuleAndStatics<M, S = {}> = {
@@ -966,7 +967,7 @@ declare module 'react-native-firebase' {
 
       type AuthProvider = {
         PROVIDER_ID: string;
-        credential: (token: string | null, secret?: string) => AuthCredential;
+        credential: (token: string | null, secret?: string, nonce?: string) => AuthCredential;
       };
 
       type EmailAuthProvider = {
@@ -1206,6 +1207,7 @@ declare module 'react-native-firebase' {
         OAuthProvider: AuthProvider;
         TwitterAuthProvider: AuthProvider;
         FacebookAuthProvider: AuthProvider;
+        AppleAuthProvider: AuthProvider;
         PhoneAuthState: {
           CODE_SENT: string;
           AUTO_VERIFY_TIMEOUT: string;

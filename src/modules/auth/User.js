@@ -125,8 +125,8 @@ export default class User {
       .linkWithCredential(
         credential.providerId,
         credential.token,
-        credential.secret
-      )
+        credential.secret,
+        credential.nonce)
       .then(userCredential => this._auth._setUserCredential(userCredential));
   }
 
@@ -144,8 +144,8 @@ export default class User {
       .linkWithCredential(
         credential.providerId,
         credential.token,
-        credential.secret
-      )
+        credential.secret,
+        credential.nonce)
       .then(userCredential => this._auth._setUserCredential(userCredential));
   }
 
@@ -160,8 +160,8 @@ export default class User {
       .reauthenticateWithCredential(
         credential.providerId,
         credential.token,
-        credential.secret
-      )
+        credential.secret,
+        credential.nonce)
       .then(userCredential => this._auth._setUserCredential(userCredential));
   }
 
@@ -181,8 +181,8 @@ export default class User {
       .reauthenticateWithCredential(
         credential.providerId,
         credential.token,
-        credential.secret
-      )
+        credential.secret,
+        credential.nonce)
       .then(userCredential => this._auth._setUserCredential(userCredential));
   }
 
